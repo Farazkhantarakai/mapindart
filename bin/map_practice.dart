@@ -1,37 +1,7 @@
-import 'dart:convert';
+import 'package:test/scaffolding.dart';
 
-import 'package:map_practice/map_practice.dart' as map_practice;
-
-void main(List<String> arguments) {
-  // List<Map<String, dynamic>> data = [
-  //   {
-  //     'id': 1,
-  //     'counts': 20,
-  //     'wins': 15,
-  //   },
-  //   {
-  //     'id': 2,
-  //     'counts': 30,
-  //     'wins': 20,
-  //   },
-  //   {
-  //     'id': 3,
-  //     'counts': 50,
-  //     'wins': 30,
-  //   },
-  //   {
-  //     'id': 4,
-  //     'counts': 80,
-  //     'wins': 70,
-  //   },
-  //   {
-  //     'id': 5,
-  //     'counts': 20,
-  //     'wins': 20,
-  //   },
-  // ];
-
-  var data = [
+void main(List<String> arguments) async {
+  List<Map<String, Object>> data = [
     {
       "id": 1,
       "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
@@ -245,12 +215,66 @@ void main(List<String> arguments) {
     }
   ];
 
-  var sum;
-
-  for (int i = 0; i < data.length; i++) {
-    if (data[i]['price'] != null) {
-      sum += double.parse(data[i]['price'].toString());
-    }
+  double sum = 0.0;
+// dart is statically type language which means you have specify its data type to a variable
+  for (Map<String, Object> i in data) {
+    sum += double.parse(i['price'].toString());
   }
-  print(sum);
+
+  double averagePrice = sum / data.length;
+  print('average price is $averagePrice');
+
+  //         #####################
+
+  // list all elements above the average pice ###
+
+  //  ################################
+
+  List<Map<String, dynamic>> list = [];
+  //this is used for querying all the elements
+  var nlist = data.where((Map<String, dynamic> element) {
+    return (element['price'] > averagePrice);
+  }).toList();
+
+  nlist.forEach((element) {
+    print(element['price']);
+  });
+
+//           ###################################
+//  list top 5 products with highest rating
+//      #############################
+
+  data.sort((Map<String, dynamic> a, Map<String, dynamic> b) {
+    return b['rating']['rate'].compareTo(a['rating']['rate']);
+  });
+  var sortedFiveElement = data.take(5).toList();
+  for (var i in sortedFiveElement) {
+    print(i);
+  }
+
+// ######################
+// list all distinct categories
+// #######################
+
+  var categories = data.map((e) {
+    return e['category'];
+  }).toSet();
+  print(categories);
+
+// ##################
+// Print average price and rating of the products
+// ##################
+
+  double sumPrice = 0.0;
+  double sumRating = 0.0;
+
+  data.forEach((Map<String, dynamic> element) {
+    sumPrice += element['price'];
+    sumRating += element['rating']['rate'];
+  });
+  double averageprice = sumPrice / data.length;
+  double averageRating = sumRating / data.length;
+
+  print('average Price is $averageprice');
+  print('average rating is $averageRating');
 }
